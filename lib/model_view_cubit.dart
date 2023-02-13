@@ -11,14 +11,9 @@ class ModelViewCubit extends Cubit<ModelViewState> {
   Future aiData(message)async {
     print(message.toString());
     emit(AiDataLoadingState());
-    return await const RemoteRepository().postHttp(message.toString()).then((value) {
-      print(value.data);
-      data = value.data[0].toString() ;
-      emit(AiDataSuccessState());
-    }).catchError((error) {
-      print(error);
-
-    });
-
+    data=  await const RemoteRepository().postHttp(message.toString());
+    emit(AiDataSuccessState());
+    return data;
   }
+
 }

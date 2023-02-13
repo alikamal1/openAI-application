@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-
 import 'model_view_cubit.dart';
 
 class ChatBotScreen extends StatefulWidget {
@@ -21,43 +20,40 @@ class _ChatPageState extends State<ChatBotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: true,
-      child: BlocProvider(
-        create: (context) => ModelViewCubit(),
-        child: BlocConsumer<ModelViewCubit, ModelViewState>(
-          listener: (context, state) {
-          },
-          builder: (context, state) {
-            var dataAPI= ModelViewCubit.get(context);
-            return Scaffold(
-              appBar: appBar(context),
-              body: Chat(
-                emptyState: const Center(child: Text('Start conversation with AI Chatbot',style: TextStyle(fontFamily: 'Cairo',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal),)),
-                theme: chatTheme(),
-                messages: _messages,
-                onSendPressed:(types.PartialText message) {
-                  _handleSendPressed(message);
-                   dataAPI.aiData(message.text).then((value) {
-                    final textMessage2 = types.TextMessage(
-                      author: _user2,
-                      createdAt: DateTime
-                          .now()
-                          .millisecondsSinceEpoch,
-                      id: randomString(),
-                      text: dataAPI.data,
-                    );
-                    _addMessage(textMessage2);
-                  });
-                  },
-                user: _user,
-              ),
-            );
-          },
-        ),
+    return BlocProvider(
+      create: (context) => ModelViewCubit(),
+      child: BlocConsumer<ModelViewCubit, ModelViewState>(
+        listener: (context, state) {
+        },
+        builder: (context, state) {
+          var dataAPI= ModelViewCubit.get(context);
+          return Scaffold(
+            appBar: appBar(context),
+            body: Chat(
+              emptyState: const Center(child: Text('Start conversation with AI Chatbot',style: TextStyle(fontFamily: 'Cairo',
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal),)),
+              theme: chatTheme(),
+              messages: _messages,
+              onSendPressed:(types.PartialText message) {
+                _handleSendPressed(message);
+                 dataAPI.aiData(message.text).then((value) {
+                  final textMessage2 = types.TextMessage(
+                    author: _user2,
+                    createdAt: DateTime
+                        .now()
+                        .millisecondsSinceEpoch,
+                    id: randomString(),
+                    text: value.data[0].toString(),
+                  );
+                  _addMessage(textMessage2);
+                });
+                },
+              user: _user,
+            ),
+          );
+        },
       ),
     );
   }
@@ -80,7 +76,6 @@ class _ChatPageState extends State<ChatBotScreen> {
 
     _addMessage(textMessage);
 
-
   }
 }
 
@@ -92,7 +87,6 @@ AppBar appBar(context) =>
       leadingWidth: 80,
       title: const Text('AI Chatbot',style: TextStyle(fontSize: 26),),
       centerTitle: true,
-
     );
 
 

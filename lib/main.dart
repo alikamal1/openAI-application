@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'chat_bot_screen.dart';
 
-void main() {
+void main() async{
   runApp(const MyApp());
 }
 
@@ -22,4 +21,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
